@@ -104,11 +104,12 @@ class MTurkManager():
             'task_group_id': self.task_group_id,
             'last_message_id': self.db_last_message_id,
         }
-        request = requests.get(self.json_api_endpoint_url, params=params)
+        response = requests.get(self.json_api_endpoint_url, params=params)
         try:
-            ret = json.loads(request.json())
-        except TypeError as e:
-            print(request.json())
+            print(response.content)
+            ret = json.loads(response.json())
+        except:
+            print(response.content)
             raise e
         conversation_dict = ret['conversation_dict']
         if ret['last_message_id']:
@@ -156,12 +157,13 @@ class MTurkManager():
         if reward:
             post_data_dict['reward'] = reward
 
-        request = requests.post(self.json_api_endpoint_url, data=json.dumps(post_data_dict))
+        response = requests.post(self.json_api_endpoint_url, data=json.dumps(post_data_dict))
         try:
-            ret = json.loads(request.json())
+            print(response.content)
+            ret = json.loads(response.json())
             return ret
-        except TypeError as e:
-            print(request.json())
+        except:
+            print(response.content)
             raise e
 
     def get_approval_status_count(self, task_group_id, approval_status, requester_key, conversation_id=None):
@@ -173,8 +175,8 @@ class MTurkManager():
         }
         if conversation_id:
             params['conversation_id'] = conversation_id
-        request = requests.get(self.json_api_endpoint_url, params=params)
-        return request.json()
+        response = requests.get(self.json_api_endpoint_url, params=params)
+        return response.json()
 
     def create_hits(self, opt):
         print('Creating HITs...')
